@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import AllData from './App';
+import FunctionalComponent from './DisplayName';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <AllData text="ahsan"  />
+    <FunctionalComponent id={0} name="ahsan" />
   </React.StrictMode>,
   document.getElementById('root')
 );
