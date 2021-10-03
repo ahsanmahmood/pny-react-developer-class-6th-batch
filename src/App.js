@@ -1,63 +1,67 @@
-import React, { Component } from "react";
+// class based component
+import React, { Component, useState } from "react";
 
-// JSX
-// limitations of JSX
+// hooks   (useState, useEffect, useCallback)
 
-class App extends Component {
-  state = {
-    // state component values , change component redraw (render)
-    counter: 2,
-    name: "ahsan",
-  };
+// class App extends Component {
+//   state = {
+//     name: "ahsan",
+//     text: "something",
+//     number: 1,
+//     text2: 1
+//   };
 
-  asd = "ajhsahahs";
+//   render() {
+//     // HTML => JSX
+//     return (
+//       <>
+//         <h1 className="asdasd btn m">Name: {this.state.name}</h1>
+//         <h2 className="asdasd btn m">Text: {this.state.text}</h2>
+//         <hr />
+//         <h2 className="asdasd btn m">Text2: {this.state.text2}</h2>
+//         <hr />
+//         <input
+//           value={this.state.name}
+//           onChange={(event) => {
+//             // this.state.name = event.target.value // never
+//             this.setState({
+//               text2: this.state.number + this.state.text2,
+//               name: event.target.value,
+//             });
+//             console.log(event.target.value);
+//           }}
+//         />
+//       </>
+//     );
+//   }
+// }
 
-  increHandler = () => {
-    // this.state.counter = 23;   //  muteable, unmu
-    this.setState((oldState) => {
-      return {
-        counter: ++oldState.counter,
-      };
+// JSX convert
+// React.createElement('div', null, React.createElement('h1', null, 'working'))
+
+// functional component
+const App = () => {
+  const [counter, setCounter] = useState(0); // es6  array destructuring
+
+  const increCounter = () => {
+    setCounter((oldVal) => {
+      return ++oldVal;
     });
   };
 
-  decreHandler = () => {
-    // this.state.counter = 23;   //  muteable, unmu
-    this.setState((oldState) => {
-      return {
-        counter: --oldState.counter,
-      };
+  const decreCounter = () => {
+    setCounter((oldVal) => {
+      return --oldVal;
     });
   };
-
-  testFunction = () => {
-    // console.log({ val: this.asd });
-    this.asd = "dsadfasdasd";
-    // console.log({ val: this.asd });
-  };
-
-  render() {
-    // console.log("Class component", { props: this.props });
-
-    const { text: textCompo, text2 } = this.props;
-
-    // console.log({ state: this.state });
-    return (
-      <>
-        <div>"{textCompo}"</div>
-        <br />
-        <h3>{this.asd}</h3>
-        <div>Hello World! Name: "{this.state.name}"</div>
-        <br />
-        <h1>{this.state.counter}</h1>
-        <br />
-
-        <button onClick={this.increHandler}>Incre</button>
-        <button onClick={() => this.decreHandler()}>Decre</button>
-        <button onClick={() => this.testFunction()}>change text</button>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <h1>{counter}</h1>
+      <br />
+      <button onClick={increCounter}>incre</button>
+      <button onClick={decreCounter}>decre</button>
+    </>
+  );
+};
 
 export default App;

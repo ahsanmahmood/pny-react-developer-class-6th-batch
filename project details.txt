@@ -1,0 +1,12 @@
+ecommerce site
+    pages 
+    1) products list
+    2) create product / edit   (form, api)
+    3) view product
+    4) login page
+    5) register page
+
+
+    Optional
+    6) cart
+    7) order
