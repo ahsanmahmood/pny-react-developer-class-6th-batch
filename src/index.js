@@ -4,6 +4,7 @@ import './index.css';
 import AllData from './App';
 // import FunctionalComponent from './DisplayName';
 import reportWebVitals from './reportWebVitals';
+import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 
 ReactDOM.render(
   <React.StrictMode>
