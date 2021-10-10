@@ -1,14 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import AllData from './App';
+// import AllData from './App';
 // import FunctionalComponent from './DisplayName';
 import reportWebVitals from './reportWebVitals';
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
+import MainLayout from './layouts/MainLayout';
 
 ReactDOM.render(
   <React.StrictMode>
-    <AllData text="ahsan"  />
+    <MainLayout />
+    {/* <button className="button">main index file</button> */}
     {/* <FunctionalComponent id={0} name="ahsan" /> */}
   </React.StrictMode>,
   document.getElementById('root')
