@@ -12,15 +12,6 @@ class ProductView extends React.Component {
 
   }
 
-  constructor (props) {
-    supor(props)
-
-    // initial state
-    this.state = {
-
-    }
-  }
-
   componentDidMount() {
     // render
     console.log('Component Mounted')
