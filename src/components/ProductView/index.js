@@ -3,26 +3,10 @@ import { Image, Typography, Button } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { productActions } from './../../store/actions'
-
 const { Title, Text } = Typography
 
 class ProductView extends React.Component {
-  state = {}
-
-  componentDidMount () {
-    // render
-    console.log('Component Mounted')
-    // APIs call
-  }
-
-  componentWillUnmount () {
-    // before remove
-    // active listeners, unsubscribe
-  }
-
   render () {
-    console.log({ props: this.props })
     const product = this.props.products.find(el => {
       if (+el.id === +this.props.match.params.productId) {
         return el

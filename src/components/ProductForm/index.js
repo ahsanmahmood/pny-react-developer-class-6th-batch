@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react'
-import { Form as AntdForm, Input, Typography } from 'antd'
-import { Formik, Form, Field } from 'formik'
-import { useParams, useLocation } from 'react-router-dom'
+import { Form as AntdForm, Input, Typography, Spin } from 'antd'
+import { Formik, Form } from 'formik'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { PRODUCTS } from './../../data/products'
-import QS from 'qs'
+import axios from 'axios'
+import { productActions } from './../../store/actions'
 
 const ProductForm = () => {
   const params = useParams()
-  const location = useLocation()
   const [mode, setMode] = useState('create')
   const [selectedProduct, setSelectedProduct] = useState({})
-  const queryParams = QS.parse(location.search, { ignoreQueryPrefix: true })
+  const dispatch = useDispatch()
+  const [isProcessing, setIsProcessing] = useState(false)
+  const products = useSelector(state => state.productR.products)
 
   useEffect(() => {
     if (params.productEditId) {
-      const product = PRODUCTS.find(el => +el.id === +params.productEditId)
+      const product = products.find(el => +el.id === +params.productEditId)
       setMode('edit')
       setSelectedProduct(product)
     } else {
@@ -25,42 +27,35 @@ const ProductForm = () => {
     return () => {}
   }, [params])
 
-  useEffect(() => {
-    // APIs call
-
-    return () => {
-      // before remove
-      // active listeners, unsubscribe
+  const formSubmitHandler = async (values, resetForm) => {
+    setIsProcessing(true)
+    const payload = {
+      product: values
     }
-  }, [])
-
-  //   useEffect(() => {
-  //     if (!validateEmail(counter)) {
-  //       console.log("Invalid Email");
-  //     } else {
-  //       alert("Valid Email.");
-  //     }
-  //   }, [counter]);
+    await dispatch(productActions.createProductAction(payload))
+    setIsProcessing(false)
+  }
 
   return (
-    <>
+    <Spin spinning={isProcessing}>
       <Typography.Title>
         {mode === 'create' ? 'Create Product' : 'Edit Product'}
       </Typography.Title>
       <Formik
         initialValues={{
-          title: selectedProduct.title || 'asdasadasd',
-          description: selectedProduct.description || 'asdasdasda',
-          image: '',
-          tags: '',
-          category: '',
-          size: ''
+          title: selectedProduct.title || 'first product',
+          description: selectedProduct.description || 'descript....',
+          image:
+            'https://images.unsplash.com/photo-1634148164019-3eddb0d33fe2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=586&q=80',
+          category: 'product'
         }}
         validate={values => {
           const errors = {}
 
+          // object 'type', loop condition
+
           // title validation
-          if (!values.title || values.title.length < 10) {
+          if (!values.title) {
             errors.title = 'Title is Required.'
           }
 
@@ -71,10 +66,8 @@ const ProductForm = () => {
 
           return errors
         }}
-        onSubmit={values => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2))
-          }, 400)
+        onSubmit={(values, { resetForm }) => {
+          formSubmitHandler(values, resetForm)
         }}
       >
         {({
@@ -107,9 +100,7 @@ const ProductForm = () => {
                 onBlur={handleBlur}
                 value={values.description}
               />
-              {errors.description &&
-                touched.description &&
-                errors.description}{' '}
+              {errors.description && touched.description && errors.description}{' '}
             </AntdForm.Item>
             <AntdForm.Item label='Image'>
               <Input
@@ -121,16 +112,6 @@ const ProductForm = () => {
               />
               {errors.image && touched.image && errors.image}
             </AntdForm.Item>
-            <AntdForm.Item label='Tags'>
-              <Input
-                type='text'
-                name='tags'
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.tags}
-              />
-              {errors.tags && touched.tags && errors.tags}
-            </AntdForm.Item>
             <AntdForm.Item label='Category'>
               <Input
                 type='text'
@@ -141,21 +122,11 @@ const ProductForm = () => {
               />
               {errors.category && touched.category && errors.category}
             </AntdForm.Item>
-            <AntdForm.Item label='Size'>
-              <Input
-                type='text'
-                name='size'
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.size}
-              />
-              {errors.size && touched.size && errors.size}
-            </AntdForm.Item>
             <button type='submit'>Submit</button>
           </Form>
         )}
       </Formik>
-    </>
+    </Spin>
   )
 }
 

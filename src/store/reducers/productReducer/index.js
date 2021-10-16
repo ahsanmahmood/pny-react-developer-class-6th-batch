@@ -1,9 +1,12 @@
 import * as ACTION_TYPES from './../../actionTypes'
 
-import { PRODUCTS } from './../../../data/products'
+import axios from 'axios'
+import { CONSTANTS } from './../../../utils'
+
+const firebaseProductsCollectionBaseUrl = `${CONSTANTS.FIREBASE_BASE_URL}/${CONSTANTS.PRODUCTS_COLLECTION_NAME}`
 
 const initialState = {
-  products: PRODUCTS,
+  products: [],
   processing: false,
   productError: false
 }
@@ -25,14 +28,36 @@ const productReducer = (state = initialState, action) => {
     case ACTION_TYPES.DELETE_PRODUCT:
       return deleteProductFun(state, action)
 
+    case ACTION_TYPES.CREATE_PRODUCT:
+      return createProductFun(state, action)
+
     default:
       return state
   }
 }
 
-const fetchProductsFun = (state, action) => {
-  const updatedState = { ...state, processing: true, productError: false }
-  return updatedState
+const fetchProductsFun = async (state, action) => {
+  try {
+    const res = await axios.get(firebaseProductsCollectionBaseUrl)
+    console.log(res)
+    const productsData = res.data
+    const fetchedProducts = []
+    for (const productId in productsData) {
+      if (Object.hasOwnProperty.call(productsData, productId)) {
+        const productData = productsData[productId]
+        const finalProduct = { id: productId, ...productData }
+        fetchedProducts.push(finalProduct)
+      }
+    }
+    const updatedState = {
+      ...state,
+      products: fetchedProducts
+    }
+    console.log({ fetchedProducts, productsData, updatedState })
+    return updatedState
+  } catch (error) {
+    alert('Error occured while fetching products.')
+  }
 }
 
 const getProductsFun = (state, action) => {
@@ -67,4 +92,19 @@ const deleteProductFun = (state, action) => {
   }
 }
 
+const createProductFun = async (state, action) => {
+  try {
+    const product = action.payload.product
+    const res = await axios.post(firebaseProductsCollectionBaseUrl, product)
+    console.log('res: ', res)
+  } catch (error) {
+    alert('Error occured while creating product.')
+  }
+}
+
 export default productReducer
+
+// get - collection url, will return whole collection
+// post - collection url, will create item in collection
+// put - collection url (with item identifier), will update item in collection
+// delete - collection url (with item identifier), will delete item from collection

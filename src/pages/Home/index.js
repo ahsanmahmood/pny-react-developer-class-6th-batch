@@ -1,14 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Breadcrumb, Layout } from 'antd'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { productActions } from './../../store/actions'
 
 import ProductCard from './../../components/ProductCard'
 
 const { Content } = Layout
 
 const Home = () => {
+  const dispatch = useDispatch()
   const products = useSelector(state => state.productR.products)
+
+  useEffect(() => {
+    dispatch(productActions.fetchProductsAction())
+  }, [])
+
+  console.log({ products })
 
   return (
     <>

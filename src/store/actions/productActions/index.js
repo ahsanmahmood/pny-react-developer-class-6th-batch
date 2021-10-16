@@ -32,3 +32,10 @@ export const deleteProductAction = payload => {
     payload
   }
 }
+
+export const createProductAction = payload => {
+  return {
+    type: ACTION_TYPES.CREATE_PRODUCT,
+    payload
+  }
+}
