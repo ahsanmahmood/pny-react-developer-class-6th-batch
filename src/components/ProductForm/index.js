@@ -1,53 +1,73 @@
 import React, { useState, useEffect } from 'react'
-import { Form as AntdForm, Input, Typography, Spin } from 'antd'
+import { Form as AntdForm, Input, Typography, Spin, notification } from 'antd'
 import { Formik, Form } from 'formik'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import axios from 'axios'
 import { productActions } from './../../store/actions'
+import { ROUTES } from './../../utils'
 
 const ProductForm = () => {
+  const history = useHistory()
   const params = useParams()
   const [mode, setMode] = useState('create')
   const [selectedProduct, setSelectedProduct] = useState({})
   const dispatch = useDispatch()
-  const [isProcessing, setIsProcessing] = useState(false)
   const products = useSelector(state => state.productR.products)
+  const productsProcessing = useSelector(state => state.productR.processing)
+
+  useEffect(() => {
+    dispatch(productActions.fetchProductsAction())
+  }, [])
 
   useEffect(() => {
     if (params.productEditId) {
-      const product = products.find(el => +el.id === +params.productEditId)
-      setMode('edit')
-      setSelectedProduct(product)
+      if (products && products.length > 0) {
+        const product = products.find(el => el.id === params.productEditId)
+        setMode('edit')
+        setSelectedProduct(product)
+      }
     } else {
       setMode('create')
     }
 
     return () => {}
-  }, [params])
+  }, [params, products])
 
   const formSubmitHandler = async (values, resetForm) => {
-    setIsProcessing(true)
     const payload = {
-      product: values
+      product: { id: selectedProduct.id, ...values }
     }
-    await dispatch(productActions.createProductAction(payload))
-    setIsProcessing(false)
+    if (mode === 'create') {
+      await dispatch(productActions.createProductAction(payload))
+      notification['success']({
+        message: 'Product Created',
+        description: 'Product created successfully.'
+      })
+    } else {
+      await dispatch(productActions.updateProduct(payload))
+      notification['info']({
+        message: 'Product Updated',
+        description: 'Product Updated Successfully.'
+      })
+    }
+    if (resetForm) {
+      resetForm()
+    }
+    history.push(ROUTES.HOME)
   }
 
   return (
-    <Spin spinning={isProcessing}>
+    <Spin spinning={productsProcessing}>
       <Typography.Title>
         {mode === 'create' ? 'Create Product' : 'Edit Product'}
       </Typography.Title>
       <Formik
         initialValues={{
-          title: selectedProduct.title || 'first product',
-          description: selectedProduct.description || 'descript....',
-          image:
-            'https://images.unsplash.com/photo-1634148164019-3eddb0d33fe2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=586&q=80',
-          category: 'product'
+          title: selectedProduct.title,
+          description: selectedProduct.description,
+          image: selectedProduct.image,
+          category: selectedProduct.category
         }}
         validate={values => {
           const errors = {}
@@ -69,6 +89,7 @@ const ProductForm = () => {
         onSubmit={(values, { resetForm }) => {
           formSubmitHandler(values, resetForm)
         }}
+        enableReinitialize
       >
         {({
           values,
@@ -90,7 +111,7 @@ const ProductForm = () => {
                 onBlur={handleBlur}
                 value={values.title}
               />
-              {errors.title && touched.title && errors.title}{' '}
+              {errors.title && touched.title && errors.title}
             </AntdForm.Item>
             <AntdForm.Item label='description'>
               <Input
@@ -100,7 +121,7 @@ const ProductForm = () => {
                 onBlur={handleBlur}
                 value={values.description}
               />
-              {errors.description && touched.description && errors.description}{' '}
+              {errors.description && touched.description && errors.description}
             </AntdForm.Item>
             <AntdForm.Item label='Image'>
               <Input

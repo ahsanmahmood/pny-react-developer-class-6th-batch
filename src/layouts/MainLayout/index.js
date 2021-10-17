@@ -1,76 +1,76 @@
-import React from "react";
-import { Layout, Menu, Typography } from "antd";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import ProductView from "../../components/ProductView";
-import ProductForm from "../../components/ProductForm";
-import CLASSES from "./styles.module.css";
+import React from 'react'
+import { Layout, Menu, Typography } from 'antd'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import ProductView from '../../components/ProductView'
+import ProductForm from '../../components/ProductForm'
+import CLASSES from './styles.module.css'
 
 // pages imports
-import Home from "./../../pages/Home";
+import Home from './../../pages/Home'
 
-const { Header, Sider } = Layout;
+const { Header, Sider } = Layout
 
 const MainLayout = () => {
   return (
     <>
       <Router>
-        <Layout>
+        <Layout theme='dark'>
           <Header className={CLASSES.header}>
-            <div className={CLASSES.logo} />
-            <Menu theme="dark" mode="horizontal">
-              <Menu.Item key="1">
-                <Link to="/">Home</Link>
+            <div className={CLASSES.logo}></div>
+            <Menu theme='light' mode='horizontal'>
+              <Menu.Item key='1'>
+                <Link to='/'>Home</Link>
               </Menu.Item>
-              <Menu.Item key="2">
-                <Link to="/login">Login</Link>
+              <Menu.Item key='2'>
+                <Link to='/login'>Login</Link>
               </Menu.Item>
-              <Menu.Item key="3">
-                <Link to="/register">Register</Link>
+              <Menu.Item key='3'>
+                <Link to='/register'>Register</Link>
               </Menu.Item>
-              <Menu.Item key="4">
-                <Link to="/product/create">Create Product</Link>
+              <Menu.Item key='4'>
+                <Link to='/product/create'>Create Product</Link>
               </Menu.Item>
             </Menu>
           </Header>
           <Layout>
-            <Sider width={200} className="site-layout-background">
+            <Sider width={200} className='site-layout-background'>
               <Menu
-                mode="inline"
-                style={{ height: "100%", borderRight: 0 }}
+                mode='inline'
+                style={{ height: '100%', borderRight: 0 }}
                 defaultSelectedKeys={[]}
               >
-                <Menu.Item key="1">
-                  <Link to="/">Home</Link>
+                <Menu.Item key='1'>
+                  <Link to='/'>Home</Link>
                 </Menu.Item>
-                <Menu.Item key="4">
-                  <Link to="/product/create">Create Product</Link>
+                <Menu.Item key='4'>
+                  <Link to='/product/create'>Create Product</Link>
                 </Menu.Item>
-                <Menu.Item key="2">
-                  <Link to="/login">Login</Link>
+                <Menu.Item key='2'>
+                  <Link to='/login'>Login</Link>
                 </Menu.Item>
-                <Menu.Item key="3">
-                  <Link to="/register">Register</Link>
+                <Menu.Item key='3'>
+                  <Link to='/register'>Register</Link>
                 </Menu.Item>
               </Menu>
             </Sider>
-            <Layout style={{ padding: "0 24px 24px" }}>
+            <Layout style={{ padding: '0 24px 24px' }}>
               <Switch>
-                <Route path="/" exact>
+                <Route path='/' exact>
                   <Home />
                 </Route>
-                <Route path="/login" exact>
+                <Route path='/login' exact>
                   <Typography.Title>login</Typography.Title>
                 </Route>
-                <Route path="/register" exact>
+                <Route path='/register' exact>
                   <Typography.Title>register</Typography.Title>
                 </Route>
-                <Route path="/product/view/:productId" exact>
+                <Route path='/product/view/:productId' exact>
                   <ProductView />
                 </Route>
-                <Route path="/product/create" exact>
+                <Route path='/product/create' exact>
                   <ProductForm />
                 </Route>
-                <Route path="/product/edit/:productEditId" exact>
+                <Route path='/product/edit/:productEditId' exact>
                   <ProductForm />
                 </Route>
                 <Route>
@@ -82,7 +82,7 @@ const MainLayout = () => {
         </Layout>
       </Router>
     </>
-  );
-};
+  )
+}
 
-export default MainLayout;
+export default MainLayout

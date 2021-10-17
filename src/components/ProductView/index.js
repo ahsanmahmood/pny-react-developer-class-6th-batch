@@ -1,14 +1,20 @@
 import React from 'react'
-import { Image, Typography, Button } from 'antd'
+import { Image, Typography, Button, Spin } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+
+import { productActions } from './../../store/actions'
 
 const { Title, Text } = Typography
 
 class ProductView extends React.Component {
+  componentDidMount () {
+    this.props.dispatch(productActions.fetchProductsAction())
+  }
+
   render () {
     const product = this.props.products.find(el => {
-      if (+el.id === +this.props.match.params.productId) {
+      if (el.id === this.props.match.params.productId) {
         return el
       } else {
         return null
@@ -23,7 +29,7 @@ class ProductView extends React.Component {
       )
     } else {
       return (
-        <>
+        <Spin spinning={this.props.productsProcessing}>
           <Image
             src={product.image}
             width='100%'
@@ -38,7 +44,7 @@ class ProductView extends React.Component {
           <div className='text-center'>
             <Button type='primary'>Add To Card</Button>
           </div>
-        </>
+        </Spin>
       )
     }
   }
@@ -46,7 +52,8 @@ class ProductView extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    products: state.productR.products
+    products: state.productR.products,
+    productsProcessing: state.productR.processing
   }
 }
 

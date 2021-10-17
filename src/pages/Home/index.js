@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Breadcrumb, Layout } from 'antd'
+import { Breadcrumb, Layout, Spin } from 'antd'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { productActions } from './../../store/actions'
@@ -11,15 +11,14 @@ const { Content } = Layout
 const Home = () => {
   const dispatch = useDispatch()
   const products = useSelector(state => state.productR.products)
+  const productsProcessing = useSelector(state => state.productR.processing)
 
   useEffect(() => {
     dispatch(productActions.fetchProductsAction())
   }, [])
 
-  console.log({ products })
-
   return (
-    <>
+    <Spin spinning={productsProcessing}>
       <Breadcrumb style={{ margin: '16px 0' }}>
         <Breadcrumb.Item>
           <Link to='/'>Home</Link>
@@ -42,7 +41,7 @@ const Home = () => {
           <h1>Sorry, No products found :/</h1>
         )}
       </Content>
-    </>
+    </Spin>
   )
 }
 
